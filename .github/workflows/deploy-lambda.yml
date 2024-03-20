@@ -21,6 +21,9 @@ jobs:
 
             - name: Compile TypeScript
               run: npm run build
+              
+            - name: Copy node_modules to dist
+              run: cp -r node_modules dist/
 
             - name: Zip files
               run: cd dist && zip -r validate-employee.zip .
