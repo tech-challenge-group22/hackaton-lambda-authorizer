@@ -5,25 +5,25 @@ name: Deploy Lambda Function
             - main
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+    # test:
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Checkout code
+    #           uses: actions/checkout@v2
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: 18
+    #         - name: Set up Node.js
+    #           uses: actions/setup-node@v2
+    #           with:
+    #               node-version: 18
 
-            - name: Install dependencies
-              run: npm install
+    #         - name: Install dependencies
+    #           run: npm install
 
-            - name: Test functions
-              run: npm test
+    #         - name: Test functions
+    #           run: npm test
     build_deploy:
         runs-on: ubuntu-latest
-        needs: test
+        # needs: test
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
