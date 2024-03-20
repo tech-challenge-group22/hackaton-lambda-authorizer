@@ -1,17 +1,51 @@
 import dotenv from "dotenv";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 dotenv.config();
 
 // Database
-import { sequelize as database } from "./db/db";
 import { Employee } from "./db/models/employee";
 
 // Utils
 import { generateJWT } from "./utils";
 import { decryptPassword } from "./utils/cryptoPassword";
 
+export let sequelize: any = null;
+
+async function loadSequelize() {
+	const sequelize = new Sequelize(
+		`mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:3306/${process.env.DB_DATABASE}`,
+		{
+			pool: {
+				max: 2,
+				min: 0,
+				idle: 0,
+				acquire: 3000,
+				evict: 3000,
+			},
+		}
+	);
+
+	// or `sequelize.sync()`
+	await sequelize.authenticate();
+
+	return sequelize;
+}
+
 export const handler = async (event: any) => {
+	// re-use the sequelize instance across invocations to improve performance
+	if (!sequelize) {
+		sequelize = await loadSequelize();
+	} else {
+		// restart connection pool to ensure connections are not re-used across invocations
+		sequelize.connectionManager.initPools();
+
+		// restore `getConnection()` if it has been overwritten by `close()`
+		if (sequelize.connectionManager.hasOwnProperty("getConnection")) {
+			delete sequelize.connectionManager.getConnection;
+		}
+	}
+
 	try {
 		// Valida secretKey para gerar JWT
 		const secretKey = process.env.SECRET_KEY_JWT_TOKEN;
@@ -68,11 +102,7 @@ export const handler = async (event: any) => {
 
 			// Se senha VÁLIDA retorna JWT
 			if (match) {
-				const token = generateJWT(secretKey, employee)
-
-				// Fecha conexão com banco de dados
-				await database.close();
-
+				const token = generateJWT(secretKey, employee);
 				return {
 					statusCode: 200,
 					body: JSON.stringify({
@@ -81,9 +111,6 @@ export const handler = async (event: any) => {
 				};
 			} else {
 				// Se senha INVÁLIDA retorna erro
-				// Fecha conexão com banco de dados
-				await database.close();
-				
 				return {
 					statusCode: 401,
 					body: JSON.stringify({
@@ -93,21 +120,18 @@ export const handler = async (event: any) => {
 			}
 		} else {
 			// Se não encontrou usuário
-			// Fecha conexão com banco de dados
-			await database.close();
 			return {
 				statusCode: 404,
 				body: JSON.stringify({ message: "Usuário não encontrado" }),
 			};
 		}
 	} catch (error) {
-		console.log(error);
 		// Qualquer outro erro de execução
-		// Fecha conexão com banco de dados
-		await database.close();
 		return {
 			statusCode: 500,
 			body: JSON.stringify({ message: error }),
 		};
+	} finally {
+		await sequelize.connectionManager.close();
 	}
 };
