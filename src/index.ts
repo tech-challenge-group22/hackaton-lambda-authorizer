@@ -6,39 +6,9 @@ dotenv.config();
 // Utils
 import { generateJWT } from "./utils";
 import { decryptPassword } from "./utils/cryptoPassword";
+import { getEmployee } from "./db/models/employee";
 
 export let sequelize: any = null;
-
-const Employee = sequelize.define(
-	"employee",
-	{
-		id: {
-			type: DataTypes.STRING,
-			autoIncrement: true,
-			allowNull: false,
-			primaryKey: true,
-		},
-		employee_name: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		employee_email: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		employee_password: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		employee_registry: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-		},
-	},
-	{
-		timestamps: false,
-	}
-);
 
 async function loadSequelize() {
 	const sequelize = new Sequelize(
@@ -89,10 +59,10 @@ export const handler = async (event: any) => {
 			};
 		}
 
-		const { user: inputUser, password: inputPassword } = JSON.parse(
-			event.body
-		);
-		// const { user: inputUser, password: inputPassword } = event.body;
+		// const { user: inputUser, password: inputPassword } = JSON.parse(
+		// 	event.body
+		// );
+		const { user: inputUser, password: inputPassword } = event.body;
 
 		if (
 			inputUser === "" ||
@@ -105,6 +75,8 @@ export const handler = async (event: any) => {
 				body: JSON.stringify({ message: "Campos não informados" }),
 			};
 		}
+
+		const Employee = getEmployee(sequelize).Employee;
 
 		// Consulta com duas condições: email OU matrícula
 		const employee = await Employee.findOne({
