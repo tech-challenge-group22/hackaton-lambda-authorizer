@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 dotenv.config();
 
 // Database
-// import { sequelize as database } from "./db/db";
+import { sequelize as database } from "./db/db";
 import { Employee } from "./db/models/employee";
 
 // Utils
@@ -54,9 +54,6 @@ export const handler = async (event: any) => {
 			},
 		});
 
-		// Fecha conexão com banco de dados
-		// await database.close();
-
 		// Se encontrou employee
 		if (employee) {
 			// Pega password do employee encontrado no database
@@ -71,14 +68,22 @@ export const handler = async (event: any) => {
 
 			// Se senha VÁLIDA retorna JWT
 			if (match) {
+				const token = generateJWT(secretKey, employee)
+
+				// Fecha conexão com banco de dados
+				await database.close();
+
 				return {
 					statusCode: 200,
 					body: JSON.stringify({
-						token: generateJWT(secretKey, employee),
+						token: token,
 					}),
 				};
 			} else {
 				// Se senha INVÁLIDA retorna erro
+				// Fecha conexão com banco de dados
+				await database.close();
+				
 				return {
 					statusCode: 401,
 					body: JSON.stringify({
@@ -88,6 +93,8 @@ export const handler = async (event: any) => {
 			}
 		} else {
 			// Se não encontrou usuário
+			// Fecha conexão com banco de dados
+			await database.close();
 			return {
 				statusCode: 404,
 				body: JSON.stringify({ message: "Usuário não encontrado" }),
@@ -96,6 +103,8 @@ export const handler = async (event: any) => {
 	} catch (error) {
 		console.log(error);
 		// Qualquer outro erro de execução
+		// Fecha conexão com banco de dados
+		await database.close();
 		return {
 			statusCode: 500,
 			body: JSON.stringify({ message: error }),
