@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import mysql from "mysql2";
 
 import { sequelize as database } from "./db/db";
 import { Employee } from "./db/models/employee";

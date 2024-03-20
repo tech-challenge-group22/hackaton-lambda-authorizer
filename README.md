@@ -1,1 +1,1 @@
-# tc-phase03-lambda
+# Hackaton Lambda authorizer
