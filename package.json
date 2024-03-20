@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.6.1",
+    "sequelize": "^6.37.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "prebuild": "rm -rf dist",
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "start": "tsc && sam local invoke validateEmployee -e event.json"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.6",
+    "@types/jsonwebtoken": "^9.0.4",
+    "esbuild": "^0.19.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "jest": {
+    "preset": "ts-jest"
+  }
+}
