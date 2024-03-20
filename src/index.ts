@@ -32,7 +32,12 @@ export const handler = async (event: any) => {
 		);
 		// const { user: inputUser, password: inputPassword } = event.body;
 
-		if (inputUser === "" || inputPassword === "") {
+		if (
+			inputUser === "" ||
+			inputUser === undefined ||
+			inputPassword === "" ||
+			inputPassword === undefined
+		) {
 			return {
 				statusCode: 500,
 				body: JSON.stringify({ message: "Campos não informados" }),
@@ -50,7 +55,7 @@ export const handler = async (event: any) => {
 		});
 
 		// Fecha conexão com banco de dados
-		database.close();
+		await database.close();
 
 		// Se encontrou employee
 		if (employee) {
@@ -89,7 +94,7 @@ export const handler = async (event: any) => {
 			};
 		}
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		// Qualquer outro erro de execução
 		return {
 			statusCode: 500,
