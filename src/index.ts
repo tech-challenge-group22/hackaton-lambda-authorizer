@@ -89,6 +89,7 @@ export const handler = async (event: any) => {
 			};
 		}
 	} catch (error) {
+		console.log(error)
 		// Qualquer outro erro de execução
 		return {
 			statusCode: 500,

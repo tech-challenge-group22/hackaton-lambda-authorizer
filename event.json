@@ -1,7 +1,7 @@
 {
 	"httpMethod": "GET",
 	"body": {
-		"user": "111111",
-		"password": "12345678"
-	}
+    "user": "111111",
+    "password": "GPontes123"
+}
 }
