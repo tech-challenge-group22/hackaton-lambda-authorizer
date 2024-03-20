@@ -1,16 +1,44 @@
 import dotenv from "dotenv";
-import { Op, Sequelize } from "sequelize";
+import { DataTypes, Op, Sequelize } from "sequelize";
 
 dotenv.config();
-
-// Database
-import { Employee } from "./db/models/employee";
 
 // Utils
 import { generateJWT } from "./utils";
 import { decryptPassword } from "./utils/cryptoPassword";
 
 export let sequelize: any = null;
+
+const Employee = sequelize.define(
+	"employee",
+	{
+		id: {
+			type: DataTypes.STRING,
+			autoIncrement: true,
+			allowNull: false,
+			primaryKey: true,
+		},
+		employee_name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		employee_email: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		employee_password: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		employee_registry: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
+	},
+	{
+		timestamps: false,
+	}
+);
 
 async function loadSequelize() {
 	const sequelize = new Sequelize(
