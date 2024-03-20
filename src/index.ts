@@ -13,28 +13,31 @@ import { decryptPassword } from "./utils/cryptoPassword";
 
 export const handler = async (event: any) => {
 	try {
-		
 		// Valida secretKey para gerar JWT
 		const secretKey = process.env.SECRET_KEY_JWT_TOKEN;
 		if (!secretKey || secretKey.trim() === "") {
 			throw new Error("Chave secreta JWT não configurada corretamente");
 		}
-		
+
 		// Se não tiver preenchido o body da requisição corretamente
-		if (
-			event.body === undefined ||
-			event.body === null ||
-			event.body.user === "" ||
-			event.body.password === ""
-		) {
+		if (event.body === undefined || event.body === null) {
 			return {
 				statusCode: 500,
 				body: JSON.stringify({ message: "Campos não informados" }),
 			};
 		}
-		
+
+		const { user: inputUser, password: inputPassword } = JSON.parse(
+			event.body
+		);
 		// const { user: inputUser, password: inputPassword } = event.body;
-		const { user: inputUser, password: inputPassword } = JSON.parse(event.body);
+
+		if (inputUser === "" || inputPassword === "") {
+			return {
+				statusCode: 500,
+				body: JSON.stringify({ message: "Campos não informados" }),
+			};
+		}
 
 		// Consulta com duas condições: email OU matrícula
 		const employee = await Employee.findOne({

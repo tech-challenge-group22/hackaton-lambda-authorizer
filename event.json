@@ -1,7 +1,7 @@
 {
-  "httpMethod": "GET",
-  "body": {
-    "user": "gabrielpontes98@gmail.com",
-    "password": "GPontes123"
-  }
+	"httpMethod": "GET",
+	"body": {
+		"user": "111111",
+		"password": "12345678"
+	}
 }
