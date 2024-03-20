@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { DataTypes, Op, Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ import { generateJWT } from "./utils";
 import { decryptPassword } from "./utils/cryptoPassword";
 import { getEmployee } from "./db/models/employee";
 
-export let sequelize: any = null;
+let sequelize: any = null;
 
 async function loadSequelize() {
 	const sequelize = new Sequelize(
