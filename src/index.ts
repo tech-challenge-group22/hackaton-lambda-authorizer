@@ -15,8 +15,14 @@ export const handler = async (event: any) => {
 			throw new Error("Chave secreta JWT não configurada corretamente");
 		}
 
-		const user = event.body.user;
-		const password = event.body.password;
+		if (event.body === undefined || event.body === null) {
+			return {
+				statusCode: 500,
+				body: JSON.stringify({ message: "Campos não informados" }),
+			};
+		}
+
+		const { user, password } = JSON.parse(event.body);
 
 		// Consulta com duas condições: nome OU matrícula
 		const employee = await Employee.findOne({
