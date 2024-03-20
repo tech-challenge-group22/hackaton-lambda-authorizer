@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 dotenv.config();
 
 // Database
-import { sequelize as database } from "./db/db";
+// import { sequelize as database } from "./db/db";
 import { Employee } from "./db/models/employee";
 
 // Utils
@@ -55,7 +55,7 @@ export const handler = async (event: any) => {
 		});
 
 		// Fecha conexão com banco de dados
-		await database.close();
+		// await database.close();
 
 		// Se encontrou employee
 		if (employee) {
