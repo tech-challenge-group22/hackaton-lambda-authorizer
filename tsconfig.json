@@ -8,6 +8,5 @@
     "types": ["node", "jest"],
     "esModuleInterop": true,
     "moduleResolution": "node" // Adicione esta opção
-  },
-  "exclude": ["pg-hstore"]
+  }
 }
