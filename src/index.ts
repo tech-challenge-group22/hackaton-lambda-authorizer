@@ -59,10 +59,10 @@ export const handler = async (event: any) => {
 			};
 		}
 
-		// const { user: inputUser, password: inputPassword } = JSON.parse(
-		// 	event.body
-		// );
-		const { user: inputUser, password: inputPassword } = event.body;
+		const { user: inputUser, password: inputPassword } = JSON.parse(
+			event.body
+		);
+		// const { user: inputUser, password: inputPassword } = event.body;
 
 		if (
 			inputUser === "" ||
